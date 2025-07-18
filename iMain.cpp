@@ -51,6 +51,7 @@ typedef struct
     int type; // 1 for static, -1 for dynamic 
     int x,y;
     int width,height;
+
 } Platform;
 
 Platform platforms[100];
@@ -147,7 +148,7 @@ void loadResources(){
     iLoadImage(&moon, "assets/images/redmoon.png");
     //iResizeImage(&moon, 500,500);
     iLoadImage(&platform, "assets/images/platform2.png");
-    iResizeImage(&platform, 100, 10);
+    iResizeImage(&platform, 150, 20);
 
     iLoadImage(&menuBackground, "assets/images/menubg.png");
     iLoadImage(&startButton, "assets/images/start.jpg");
@@ -159,11 +160,11 @@ void loadResources(){
     iResizeImage(&exitButton, 300, 100);
 
 
-    addPlatform(300, 200, 200, 30);  
-    addPlatform(450, 280, 200, 30); 
-    addPlatform(600, 360, 200, 30);
-    addPlatform(700, 420, 200, 30);
-    addPlatform(800, 500, 200, 30);  
+    addPlatform(300, 200, 150, 20);  
+    addPlatform(450, 280, 150, 20); 
+    addPlatform(600, 360, 150, 20);
+    addPlatform(700, 420, 150, 20);
+    addPlatform(800, 500, 150, 20);  
 }
 void playMusic(int musicIdx) {
     // Stop current music if any is playing
@@ -206,10 +207,10 @@ void handleMenuSelection() {
     }
 }
 float getPlayerWidth() {
-    return angel.idle[0].width * 0.1f;
+    return angel.idle[0].width * 0.05;
 }
 float getPlayerHeight() {
-    return angel.idle[0].height * 0.1f;
+    return angel.idle[0].height * 0.05;
 }
 bool isOnGroundOrPlatform() {
     float playerBottomY = angel.sprite.y;
@@ -409,6 +410,17 @@ void iDraw()
     iShowText(100, 300,"Press UP arrow to jump","assets/fonts/Cardinal.ttf", 30);
     iShowText(100, 550,"Collect keys to open portal","assets/fonts/Cardinal.ttf", 30);
     iShowText(100, 600,"Get into portal to win","assets/fonts/Cardinal.ttf", 30);
+            // --- DEBUG: Draw Player Collision Box ---
+        iSetColor(255, 0, 0); // Red color for player box
+        // Use angel.sprite.x, angel.sprite.y and calculated width/height
+        iRectangle(angel.sprite.x, angel.sprite.y, getPlayerWidth(), getPlayerHeight());
+
+        // --- DEBUG: Draw Platform Collision Boxes ---
+        iSetColor(0, 255, 0); // Green color for platform boxes
+        for (int i = 0; i < platformCount; i++) {
+            Platform p = platforms[i];
+            iRectangle(p.x, p.y, p.width, p.height);
+        }
     if (portalcond == 1){
         iShowText(500, 700,"You Win","assets/fonts/Cardinal.ttf", 50);
     }
@@ -446,7 +458,9 @@ void iDraw()
         &platforms[i].frame
     );
 
+
 }
+
     }
     else {
         // Draw menu
